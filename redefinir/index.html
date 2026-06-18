@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redefinir senha — Pai de Pet</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    .emoji { font-size: 56px; margin-bottom: 1rem; }
+    .brand { font-size: 13px; font-weight: 600; color: #00897B; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.75rem; }
+    p { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 1.25rem; }
+    .btn {
+      display: inline-block;
+      background: #00897B;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+    }
+    .footer { font-size: 12px; color: #aaa; margin-top: 1.5rem; }
+    .footer a { color: #00897B; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">🔑</div>
+    <div class="brand">Pai de Pet</div>
+    <h1>Redefinir senha</h1>
+    <p>Abrindo o app para você criar uma nova senha…</p>
+    <p>Se o app não abrir automaticamente, toque no botão abaixo.</p>
+    <button class="btn" id="btn">Abrir o Pai de Pet</button>
+    <p class="footer">
+      Precisa de ajuda?
+      <a href="mailto:contato@paidepet.app">contato@paidepet.app</a>
+    </p>
+  </div>
+  <script>
+    function appUrl() {
+      // Supabase redireciona aqui com os tokens no hash:
+      // paidepet.app/redefinir#access_token=xxx&refresh_token=xxx&type=recovery
+      var hash = window.location.hash.substring(1);
+      return 'paidepet://reset-senha' + (hash ? '#' + hash : '');
+    }
+
+    document.getElementById('btn').addEventListener('click', function () {
+      window.location.href = appUrl();
+    });
+
+    // Tenta abrir o app automaticamente ao carregar a página
+    window.addEventListener('load', function () {
+      window.location.href = appUrl();
+    });
+  </script>
+</body>
+</html>
