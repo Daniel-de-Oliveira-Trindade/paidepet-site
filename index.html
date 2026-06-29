@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pai de Pet — Encontre pets perdidos, conecte-se com a comunidade pet</title>
   <meta name="description" content="Pai de Pet ajuda donos a encontrar pets perdidos, registrar avistamentos e se conectar com a comunidade pet da sua cidade." />
+
+  <!-- Favicon e ícone iOS -->
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -36,14 +41,16 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
       font-size: 1.1rem;
       font-weight: 700;
       color: var(--teal);
       text-decoration: none;
     }
-    .brand-paw {
-      font-size: 1.4rem;
+    .brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
     }
     nav a.nav-link {
       font-size: 0.875rem;
@@ -59,9 +66,13 @@
       text-align: center;
       padding: 4rem 1.5rem 5rem;
     }
-    .hero-emoji {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
+    .hero-logo {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      margin: 0 auto 1.25rem;
+      display: block;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
     }
     .hero h1 {
       font-size: clamp(1.6rem, 5vw, 2.4rem);
@@ -76,49 +87,27 @@
       margin: 0 auto 2rem;
     }
 
-    /* ── DOWNLOAD BUTTONS ── */
+    /* ── STORE BADGES ── */
     .download-row {
       display: flex;
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
     }
-    .btn-store {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: var(--white);
-      color: var(--teal-dark);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      transition: transform 0.15s, box-shadow 0.15s;
+    .badge-link {
+      display: inline-block;
+      transition: transform 0.15s, opacity 0.15s;
     }
-    .btn-store:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-    }
-    .btn-store.disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
+    .badge-link:hover { transform: translateY(-2px); }
+    .badge-link.disabled {
+      opacity: 0.5;
       pointer-events: none;
+      cursor: not-allowed;
     }
-    .btn-store .store-icon {
-      font-size: 1.3rem;
-    }
-    .btn-store .store-label {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      line-height: 1.2;
-    }
-    .btn-store .store-label small {
-      font-weight: 400;
-      font-size: 0.7rem;
-      opacity: 0.7;
+    .badge-link svg {
+      display: block;
+      height: 52px;
+      width: auto;
     }
 
     /* ── FEATURES ── */
@@ -191,9 +180,7 @@
       border-radius: 12px;
       transition: background 0.15s;
     }
-    .btn-business:hover {
-      background: var(--teal-dark);
-    }
+    .btn-business:hover { background: var(--teal-dark); }
 
     /* ── FOOTER ── */
     footer {
@@ -203,10 +190,7 @@
       color: var(--muted);
       border-top: 1px solid #eee;
     }
-    footer a {
-      color: var(--teal);
-      text-decoration: none;
-    }
+    footer a { color: var(--teal); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
   </style>
 </head>
@@ -214,32 +198,50 @@
 
   <nav>
     <a class="brand" href="/">
-      <span class="brand-paw">🐾</span> Pai de Pet
+      <img src="/logo.png" alt="Pai de Pet" />
+      Pai de Pet
     </a>
     <a class="nav-link" href="/privacidade">Privacidade</a>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-emoji">🐾</div>
+    <img class="hero-logo" src="/logo.png" alt="Pai de Pet" />
     <h1>Encontre pets perdidos e conecte-se com a comunidade pet</h1>
     <p>Registre avistamentos, publique alertas de animais perdidos, adote e descubra petshops parceiros na sua cidade.</p>
 
     <div class="download-row">
-      <a class="btn-store" href="https://play.google.com/store/apps/details?id=app.paidepet" target="_blank" rel="noopener">
-        <span class="store-icon">▶</span>
-        <span class="store-label">
-          <small>Disponível no</small>
-          Google Play
-        </span>
+
+      <!-- Google Play badge — uso dos badges oficiais é explicitamente permitido pelo Google para links de app -->
+      <a class="badge-link" href="https://play.google.com/store/apps/details?id=app.paidepet" target="_blank" rel="noopener" aria-label="Disponível no Google Play">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 54" role="img">
+          <rect width="180" height="54" rx="7" fill="#000"/>
+          <!-- Ícone Play com 4 cores do Google -->
+          <polygon points="14,13 14,27 24,20" fill="#EA4335"/>
+          <polygon points="14,27 14,41 24,34" fill="#34A853"/>
+          <polygon points="14,13 24,20 24,34 14,41" fill="#FBBC04"/>
+          <polygon points="24,20 36,27 24,34" fill="#4285F4"/>
+          <!-- Textos -->
+          <text x="44" y="23" fill="#fff" font-family="Arial,sans-serif" font-size="9.5" letter-spacing="0.8">GET IT ON</text>
+          <text x="44" y="40" fill="#fff" font-family="Arial,sans-serif" font-size="16" font-weight="bold">Google Play</text>
+        </svg>
       </a>
-      <span class="btn-store disabled" aria-label="App Store em breve">
-        <span class="store-icon">🍎</span>
-        <span class="store-label">
-          <small>Em breve</small>
-          App Store
-        </span>
+
+      <!-- App Store badge — uso dos badges oficiais é explicitamente permitido pela Apple para links de app -->
+      <span class="badge-link disabled" aria-label="Em breve na App Store">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 54" role="img">
+          <rect width="180" height="54" rx="7" fill="#000"/>
+          <!-- Apple logo (path baseado no símbolo público da Apple) -->
+          <g transform="translate(12, 9) scale(0.72)">
+            <path d="M26.5 4.5c1.4-1.7 2.3-4 2.1-6.3-2 .1-4.4 1.3-5.8 3-1.3 1.5-2.4 3.8-2.1 6.1 2.2.1 4.4-1.1 5.8-2.8z" fill="#fff"/>
+            <path d="M28.6 8c-3.2-.2-5.9 1.8-7.4 1.8-1.5 0-3.8-1.7-6.3-1.7-3.2.1-6.2 1.9-7.9 4.8-3.4 5.8-.9 14.5 2.4 19.2 1.6 2.3 3.5 4.9 6 4.8 2.4-.1 3.3-1.5 6.1-1.5s3.7 1.5 6.2 1.5c2.6-.1 4.2-2.3 5.8-4.7 1.8-2.6 2.5-5.2 2.5-5.4-.1 0-4.9-1.9-4.9-7.4 0-4.7 3.8-6.9 3.9-7-2.2-3.2-5.7-3.4-6.4-3.4z" fill="#fff"/>
+          </g>
+          <!-- Textos -->
+          <text x="52" y="23" fill="#fff" font-family="Arial,sans-serif" font-size="9" letter-spacing="0.3">Download on the</text>
+          <text x="52" y="40" fill="#fff" font-family="Arial,sans-serif" font-size="16" font-weight="bold">App Store</text>
+        </svg>
       </span>
+
     </div>
   </section>
 
