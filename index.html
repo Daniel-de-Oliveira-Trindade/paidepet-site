@@ -2,10 +2,289 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=/privacidade" />
-  <title>Pai de Pet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pai de Pet — Encontre pets perdidos, conecte-se com a comunidade pet</title>
+  <meta name="description" content="Pai de Pet ajuda donos a encontrar pets perdidos, registrar avistamentos e se conectar com a comunidade pet da sua cidade." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #00897B;
+      --teal-dark: #00695C;
+      --teal-light: #E0F2F1;
+      --text: #1a1a1a;
+      --muted: #666;
+      --surface: #f7f7f7;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .brand-paw {
+      font-size: 1.4rem;
+    }
+    nav a.nav-link {
+      font-size: 0.875rem;
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 4rem 1.5rem 5rem;
+    }
+    .hero-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      max-width: 480px;
+      margin: 0 auto 2rem;
+    }
+
+    /* ── DOWNLOAD BUTTONS ── */
+    .download-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-store {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--white);
+      color: var(--teal-dark);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-store:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    }
+    .btn-store.disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .btn-store .store-icon {
+      font-size: 1.3rem;
+    }
+    .btn-store .store-label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+    .btn-store .store-label small {
+      font-weight: 400;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 3.5rem 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .feature-card .feat-emoji {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .feature-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ── ESTABELECIMENTO CTA ── */
+    .business-cta {
+      background: var(--teal-light);
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    .business-cta h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      margin-bottom: 0.5rem;
+    }
+    .business-cta p {
+      font-size: 0.95rem;
+      color: var(--teal-dark);
+      opacity: 0.85;
+      margin-bottom: 1.5rem;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn-business {
+      display: inline-block;
+      background: var(--teal);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 12px;
+      transition: background 0.15s;
+    }
+    .btn-business:hover {
+      background: var(--teal-dark);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid #eee;
+    }
+    footer a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-  <p><a href="/privacidade">Política de Privacidade</a></p>
+
+  <nav>
+    <a class="brand" href="/">
+      <span class="brand-paw">🐾</span> Pai de Pet
+    </a>
+    <a class="nav-link" href="/privacidade">Privacidade</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-emoji">🐾</div>
+    <h1>Encontre pets perdidos e conecte-se com a comunidade pet</h1>
+    <p>Registre avistamentos, publique alertas de animais perdidos, adote e descubra petshops parceiros na sua cidade.</p>
+
+    <div class="download-row">
+      <a class="btn-store" href="https://play.google.com/store/apps/details?id=app.paidepet" target="_blank" rel="noopener">
+        <span class="store-icon">▶</span>
+        <span class="store-label">
+          <small>Disponível no</small>
+          Google Play
+        </span>
+      </a>
+      <span class="btn-store disabled" aria-label="App Store em breve">
+        <span class="store-icon">🍎</span>
+        <span class="store-label">
+          <small>Em breve</small>
+          App Store
+        </span>
+      </span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <h2>Tudo que seu pet precisa em um só lugar</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feat-emoji">🔍</div>
+        <h3>Pet perdido</h3>
+        <p>Publique alertas e receba notificações de avistamentos na sua região.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-emoji">📍</div>
+        <h3>Avistamentos</h3>
+        <p>Registre animais que você viu na rua e ajude donos a encontrá-los.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-emoji">🏠</div>
+        <h3>Adoção</h3>
+        <p>Encontre animais para adotar ou publique um anúncio de adoção responsável.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-emoji">🏪</div>
+        <h3>Petshops parceiros</h3>
+        <p>Descubra estabelecimentos próximos e resgate cupons de desconto exclusivos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTABELECIMENTO CTA -->
+  <section class="business-cta">
+    <h2>Tem um petshop ou clínica veterinária?</h2>
+    <p>Cadastre seu estabelecimento gratuitamente, gerencie seu perfil e ofereça cupons para a comunidade Pai de Pet.</p>
+    <a class="btn-business" href="https://parceiros.paidepet.app">Cadastrar meu estabelecimento</a>
+  </section>
+
+  <footer>
+    <p>
+      &copy; 2025 Pai de Pet &nbsp;·&nbsp;
+      <a href="/privacidade">Política de Privacidade</a> &nbsp;·&nbsp;
+      <a href="/excluir-conta">Excluir conta</a> &nbsp;·&nbsp;
+      <a href="mailto:contato@paidepet.app">contato@paidepet.app</a>
+    </p>
+  </footer>
+
 </body>
 </html>
