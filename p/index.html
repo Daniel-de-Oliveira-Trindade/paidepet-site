@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pet perdido — Pai de Pet</title>
+  <meta name="description" content="Ajude a encontrar esse pet! Qualquer informação é bem-vinda." />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+
+  <!-- Open Graph (WhatsApp mostra branding do app; info do pet carrega client-side) -->
+  <meta property="og:site_name" content="Pai de Pet" />
+  <meta property="og:title" content="Pet perdido — precisa da sua ajuda" />
+  <meta property="og:description" content="Viu esse pet? Qualquer informação ajuda o dono a encontrá-lo." />
+  <meta property="og:image" content="https://paidepet.app/logo.png" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #00897B;
+      --teal-dark: #00695C;
+      --surface: #f7f7f7;
+      --text: #1a1a1a;
+      --muted: #666;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .brand img { width: 28px; height: 28px; border-radius: 7px; }
+
+    main {
+      flex: 1;
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 1.25rem 2rem;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 4rem 0;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #eee;
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Card ── */
+    .card {
+      border: 1px solid #eee;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .pet-photo {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+    }
+    .card-body { padding: 1.1rem 1.25rem 1.25rem; }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 100px;
+      margin-bottom: 0.6rem;
+    }
+    .s-procurando { background: #FFF3E0; color: #E65100; }
+    .s-encontrado { background: #E8F5E9; color: #2E7D32; }
+    .s-arquivado  { background: var(--surface); color: var(--muted); }
+
+    .pet-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
+    }
+    .pet-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+    .info-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      font-size: 0.875rem;
+      margin-bottom: 0.35rem;
+    }
+    .info-row .lbl { color: var(--muted); min-width: 60px; flex-shrink: 0; }
+
+    .desc {
+      margin-top: 0.9rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid #eee;
+      font-size: 0.875rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* ── Botões ── */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn-wa   { background: #25D366; color: #fff; }
+    .btn-app  { background: var(--teal); color: #fff; }
+
+    /* ── CTA download ── */
+    .download-cta {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      text-align: center;
+    }
+    .download-cta p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .badge-img { height: 42px; width: auto; }
+
+    /* ── Erro ── */
+    .error-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--muted);
+    }
+    .error-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .error-state h2 { font-size: 1.1rem; color: var(--text); margin-bottom: 0.5rem; }
+
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid #eee;
+    }
+    footer a { color: var(--teal); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">
+    <img src="/logo.png" alt="Pai de Pet" />
+    Pai de Pet
+  </a>
+</nav>
+
+<main>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+  </div>
+
+  <div id="content" hidden></div>
+
+  <div id="error" class="error-state" hidden>
+    <div class="icon">🔍</div>
+    <h2>Post não encontrado</h2>
+    <p id="error-msg">O pet já pode ter sido encontrado ou o link expirou.</p>
+  </div>
+</main>
+
+<footer>
+  <a href="/">Pai de Pet</a> &nbsp;·&nbsp; <a href="/privacidade">Privacidade</a>
+</footer>
+
+<script>
+(function () {
+  var SUPABASE_URL = 'https://drjhgrygcrxnlsbihzvv.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyamhncnlnY3J4bmxzYmloenZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNzMwNjEsImV4cCI6MjA5Njg0OTA2MX0.uthfYS9tLtN2aqbbbIknyy1Qi0yIjmUkh-rTrpUZpAA';
+
+  var SPECIES = {
+    cao: 'Cão', gato: 'Gato', ave: 'Ave',
+    reptil: 'Réptil', aracnideo: 'Arácnideo', anfibio: 'Anfíbio', outro: 'Animal'
+  };
+
+  function speciesLabel(species, detail) {
+    if (!species) return 'Animal';
+    if (species === 'outro' && detail) return detail;
+    return SPECIES[species] || species;
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function el(id) { return document.getElementById(id); }
+
+  function showError(msg) {
+    el('loading').hidden = true;
+    el('error').hidden = false;
+    if (msg) el('error-msg').textContent = msg;
+  }
+
+  function renderPost(post) {
+    el('loading').hidden = true;
+
+    var name        = post.pet_name || (post.pet && post.pet.name) || 'Pet perdido';
+    var species     = post.pet_species || (post.pet && post.pet.species) || null;
+    var detail      = post.pet_species_detail || null;
+    var breed       = post.pet_breed || null;
+    var color       = post.pet_color || null;
+    var address     = post.last_seen_address || null;
+    var description = post.description || '';
+    var status      = post.status || 'procurando';
+    var phone       = post.contact_phone || null;
+
+    var photos = (post.photos && post.photos.length)     ? post.photos
+               : (post.pet && post.pet.photos && post.pet.photos.length) ? post.pet.photos
+               : (post.pet && post.pet.avatar_url)       ? [post.pet.avatar_url]
+               : [];
+    var photo = photos[0] || null;
+
+    var badgeClass = status === 'procurando' ? 's-procurando'
+                   : status === 'encontrado' ? 's-encontrado' : 's-arquivado';
+    var badgeText  = status === 'procurando' ? 'PROCURANDO'
+                   : status === 'encontrado' ? 'JÁ ENCONTRADO ✓' : 'ARQUIVADO';
+
+    var metaParts = [speciesLabel(species, detail)];
+    if (breed) metaParts.push(breed);
+    if (color) metaParts.push(color);
+
+    var appLink = 'paidepet://perdido/' + post.id;
+    var waMsg   = 'Oi! Vi o alerta do ' + name + ' no Pai de Pet. Posso ter uma informação.';
+    var waUrl   = phone
+      ? 'https://wa.me/55' + phone + '?text=' + encodeURIComponent(waMsg)
+      : null;
+
+    var html = '';
+
+    html += '<div class="card">';
+    if (photo) {
+      html += '<img class="pet-photo" src="' + esc(photo) + '" alt="Foto de ' + esc(name) + '" loading="lazy" />';
+    }
+    html += '<div class="card-body">';
+    html += '<span class="status-badge ' + badgeClass + '">' + badgeText + '</span>';
+    html += '<div class="pet-name">' + esc(name) + '</div>';
+    html += '<div class="pet-meta">' + esc(metaParts.join(' · ')) + '</div>';
+    if (address) {
+      html += '<div class="info-row"><span class="lbl">Visto em</span><span>' + esc(address) + '</span></div>';
+    }
+    if (description) {
+      html += '<div class="desc">' + esc(description) + '</div>';
+    }
+    html += '</div></div>';
+
+    html += '<div class="actions">';
+    if (waUrl && status === 'procurando') {
+      html += '<a class="btn btn-wa" href="' + esc(waUrl) + '" target="_blank" rel="noopener">';
+      html += '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
+      html += 'Entrar em contato';
+      html += '</a>';
+    }
+    html += '<a class="btn btn-app" href="' + esc(appLink) + '">';
+    html += '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>';
+    html += 'Abrir no Pai de Pet';
+    html += '</a>';
+    html += '</div>';
+
+    html += '<div class="download-cta">';
+    html += '<p>Ainda não tem o app? Baixe e ajude a encontrar pets perdidos na sua cidade.</p>';
+    html += '<a href="https://play.google.com/store/apps/details?id=app.paidepet" target="_blank" rel="noopener">';
+    html += '<img class="badge-img" src="/google-play-badge.svg" alt="Disponível no Google Play" />';
+    html += '</a>';
+    html += '</div>';
+
+    el('content').innerHTML = html;
+    el('content').hidden = false;
+  }
+
+  async function loadPost() {
+    var code = new URLSearchParams(window.location.search).get('c');
+    if (!code || !/^[0-9a-f]{8}$/.test(code)) {
+      showError('Link inválido ou incompleto.');
+      return;
+    }
+
+    try {
+      var res = await fetch(
+        SUPABASE_URL + '/rest/v1/lost_pet_posts'
+          + '?select=*,pet:pets(name,species,photos,avatar_url)'
+          + '&share_code=eq.' + code
+          + '&limit=1',
+        { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY } }
+      );
+      var rows = await res.json();
+      if (!rows || !rows.length) {
+        showError('Post não encontrado. O pet já pode ter sido localizado ou o link expirou.');
+        return;
+      }
+      renderPost(rows[0]);
+    } catch (_) {
+      showError('Erro ao carregar. Verifique sua conexão e tente novamente.');
+    }
+  }
+
+  loadPost();
+})();
+</script>
+
+</body>
+</html>
