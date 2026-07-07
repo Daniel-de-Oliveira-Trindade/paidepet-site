@@ -330,12 +330,23 @@
 
   function openOrInstall(postId) {
     var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    var store = isIOS
-      ? 'https://apps.apple.com/br/app/pai-de-pet/id000000000'
-      : 'https://play.google.com/store/apps/details?id=app.paidepet';
-    window.location = 'paidepet://perdido/' + postId;
-    // Se o app não abrir em 1.5s, manda pra loja
-    setTimeout(function() { window.location = store; }, 1500);
+
+    if (isIOS) {
+      // iOS: tenta custom scheme e, se não abrir em 1.5s, vai pra App Store
+      window.location = 'paidepet://perdido/' + postId;
+      setTimeout(function() {
+        window.location = 'https://apps.apple.com/br/app/pai-de-pet/id000000000';
+      }, 1500);
+    } else {
+      // Android: intent:// mostra o diálogo "Abrir com" nativo do sistema.
+      // Se o app não estiver instalado, chrome segue o browser_fallback_url pra Play Store.
+      window.location = 'intent://perdido/' + postId
+        + '#Intent'
+        + ';scheme=paidepet'
+        + ';package=app.paidepet'
+        + ';S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=app.paidepet')
+        + ';end';
+    }
   }
 
   async function loadPost() {
