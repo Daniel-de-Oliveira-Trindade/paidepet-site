@@ -334,21 +334,33 @@
       ? 'https://apps.apple.com/br/app/pai-de-pet/id000000000'
       : 'https://play.google.com/store/apps/details?id=app.paidepet';
 
-    if (isIOS) {
-      window.location = 'paidepet://perdido/' + postId;
-    } else {
-      // intent:// funciona no Chrome; em WebViews (WhatsApp, Instagram) é bloqueado.
-      // O setTimeout abaixo garante o fallback pra Play Store nos dois casos.
-      window.location = 'intent://perdido/' + postId
-        + '#Intent'
-        + ';scheme=paidepet'
-        + ';package=app.paidepet'
-        + ';S.browser_fallback_url=' + encodeURIComponent(store)
-        + ';end';
+    // Fallback: se o app não abrir em 1.5s, manda pra loja
+    var fallback = setTimeout(function () {
+      window.location.href = store;
+    }, 1500);
+
+    // Quando o app abre, o Chrome coloca a tab em background (hidden).
+    // Cancela o fallback para não abrir a loja por cima do app.
+    document.addEventListener('visibilitychange', function onHide() {
+      if (document.hidden) {
+        clearTimeout(fallback);
+        document.removeEventListener('visibilitychange', onHide);
+      }
+    });
+
+    var deeplink = isIOS
+      ? 'paidepet://perdido/' + postId
+      : 'intent://perdido/' + postId
+          + '#Intent;scheme=paidepet;package=app.paidepet'
+          + ';S.browser_fallback_url=' + encodeURIComponent(store) + ';end';
+
+    try {
+      window.location.href = deeplink;
+    } catch (e) {
+      // WebView bloqueou a navegação — vai direto pra loja
+      clearTimeout(fallback);
+      window.location.href = store;
     }
-    // Se o app abrir, o timer dispara mas é inofensivo.
-    // Se o link for bloqueado (WebView), manda pra loja após 1.5s.
-    setTimeout(function() { window.location = store; }, 1500);
   }
 
   async function loadPost() {
