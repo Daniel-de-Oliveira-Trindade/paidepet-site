@@ -348,9 +348,11 @@
       }
     });
 
+    // Android: intent:// com host vazio → paidepet:///perdido/{id} (Expo Router path format)
+    // iOS: paidepet:///perdido/{id} (triple slash = sem host, caminho absoluto)
     var deeplink = isIOS
-      ? 'paidepet://perdido/' + postId
-      : 'intent://perdido/' + postId
+      ? 'paidepet:///perdido/' + postId
+      : 'intent:///perdido/' + postId
           + '#Intent;scheme=paidepet;package=app.paidepet'
           + ';S.browser_fallback_url=' + encodeURIComponent(store) + ';end';
 
