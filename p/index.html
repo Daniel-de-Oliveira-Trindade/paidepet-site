@@ -280,7 +280,6 @@
     if (breed) metaParts.push(breed);
     if (color) metaParts.push(color);
 
-    var appLink = 'paidepet://perdido/' + post.id;
     var waMsg   = 'Oi! Vi o alerta do ' + name + ' no Pai de Pet. Posso ter uma informação.';
     var waUrl   = phone
       ? 'https://wa.me/55' + phone + '?text=' + encodeURIComponent(waMsg)
@@ -328,19 +327,21 @@
     el('content').hidden = false;
   }
 
-  function openOrInstall(postId) {
+  // Exposto no escopo global — o botão usa onclick inline (fora deste IIFE),
+  // que só enxerga funções em window. Sem isso, clicar não fazia nada.
+  window.openOrInstall = function (postId) {
     var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     var store = isIOS
       ? 'https://apps.apple.com/br/app/pai-de-pet/id000000000'
       : 'https://play.google.com/store/apps/details?id=app.paidepet';
 
-    // Fallback: se o app não abrir em 1.5s, manda pra loja
+    // Fallback pra loja se o app não abrir (não instalado). Só dispara se a
+    // página ainda estiver visível — quando o app abre, a aba vai pra
+    // background (hidden) e o fallback é cancelado.
     var fallback = setTimeout(function () {
-      window.location.href = store;
-    }, 1500);
+      if (!document.hidden) window.location.href = store;
+    }, 2000);
 
-    // Quando o app abre, o Chrome coloca a tab em background (hidden).
-    // Cancela o fallback para não abrir a loja por cima do app.
     document.addEventListener('visibilitychange', function onHide() {
       if (document.hidden) {
         clearTimeout(fallback);
@@ -348,22 +349,15 @@
       }
     });
 
-    // Android: intent:// com host vazio → paidepet:///perdido/{id} (Expo Router path format)
-    // iOS: paidepet:///perdido/{id} (triple slash = sem host, caminho absoluto)
-    var deeplink = isIOS
-      ? 'paidepet:///perdido/' + postId
-      : 'intent:///perdido/' + postId
-          + '#Intent;scheme=paidepet;package=app.paidepet'
-          + ';S.browser_fallback_url=' + encodeURIComponent(store) + ';end';
-
+    // Scheme direto (triple slash = sem host, caminho absoluto no Expo Router).
+    // Confirmado abrindo o app no Android e iOS.
     try {
-      window.location.href = deeplink;
+      window.location.href = 'paidepet:///perdido/' + postId;
     } catch (e) {
-      // WebView bloqueou a navegação — vai direto pra loja
       clearTimeout(fallback);
       window.location.href = store;
     }
-  }
+  };
 
   async function loadPost() {
     var code = new URLSearchParams(window.location.search).get('c');
