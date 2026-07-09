@@ -59,6 +59,12 @@
   </div>
   <script>
     function appUrl() {
+      // Novo formato: ?token_hash=XXX&type=recovery (não consumido por scanners)
+      var query = window.location.search;
+      if (query && query.indexOf('token_hash') !== -1) {
+        return 'paidepet://reset-senha' + query;
+      }
+      // Formato antigo: #access_token=... (fallback para links já enviados)
       var hash = window.location.hash.substring(1);
       return 'paidepet://reset-senha' + (hash ? '#' + hash : '');
     }
