@@ -102,40 +102,34 @@
     }
     .badge-link:hover { transform: translateY(-2px); }
     .badge-link img { display: block; height: 52px; width: auto; }
-    .badge-store {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: #000;
-      border-radius: 10px;
-      padding: 9px 18px 9px 12px;
-      text-decoration: none;
-      color: #fff;
-      transition: transform 0.15s, opacity 0.15s;
+
+    /* Badge "em breve": mesma arte, desabilitada + selo */
+    .badge-soon {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+      cursor: default;
+    }
+    .badge-soon img {
+      display: block;
       height: 52px;
-    }
-    .badge-store:hover { transform: translateY(-2px); }
-    .badge-store.disabled {
+      width: auto;
       opacity: 0.5;
-      pointer-events: none;
-      cursor: not-allowed;
+      filter: grayscale(0.15);
     }
-    .badge-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      line-height: 1.15;
-    }
-    .badge-text small {
-      font-size: 9px;
-      letter-spacing: 0.6px;
-      opacity: 0.85;
-      font-weight: 400;
-    }
-    .badge-text strong {
-      font-size: 17px;
+    .soon-tag {
+      position: absolute;
+      top: -9px;
+      right: -8px;
+      background: var(--teal-dark);
+      color: #fff;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      letter-spacing: 0.3px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      line-height: 1.5;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     }
 
     /* ── FEATURES ── */
@@ -240,23 +234,15 @@
 
     <div class="download-row">
 
-      <!-- Google Play badge oficial -->
+      <!-- Google Play (badge oficial em português) -->
       <a class="badge-link" href="https://play.google.com/store/apps/details?id=app.paidepet" target="_blank" rel="noopener" aria-label="Disponível no Google Play">
-        <img src="/google-play-badge.svg" alt="Get it on Google Play" height="52" />
+        <img src="/google-play-badge.png" alt="Disponível no Google Play" height="52" />
       </a>
 
-      <!-- App Store badge — uso permitido pela Apple para links de app -->
-      <span class="badge-store disabled" aria-label="Em breve na App Store">
-        <div class="badge-apple-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" width="22" fill="#fff">
-            <path d="M18.7 15.5c0-3 2.5-4.5 2.6-4.6-1.4-2.1-3.6-2.3-4.4-2.4-1.9-.2-3.7 1.1-4.6 1.1-.9 0-2.4-1.1-3.9-1.1-2 0-3.9 1.2-4.9 3-2.1 3.7-.5 9.2 1.5 12.2 1 1.5 2.2 3.1 3.8 3.1 1.5-.1 2.1-1 3.9-1s2.4 1 4 1c1.6 0 2.7-1.5 3.7-3 1.2-1.7 1.7-3.4 1.7-3.5-.1 0-3.4-1.3-3.4-4.8z"/>
-            <path d="M15.7 5.8c.8-1 1.4-2.5 1.2-4-1.2.1-2.7.8-3.6 1.9-.8.9-1.5 2.4-1.3 3.9 1.4.1 2.8-.7 3.7-1.8z"/>
-          </svg>
-        </div>
-        <div class="badge-text">
-          <small>Download on the</small>
-          <strong>App Store</strong>
-        </div>
+      <!-- App Store — arte oficial em português, ainda "em breve" (app iOS não publicado) -->
+      <span class="badge-soon" aria-label="Em breve na App Store" title="Em breve na App Store">
+        <img src="/app-store-badge.png" alt="Em breve na App Store" />
+        <span class="soon-tag">Em breve</span>
       </span>
 
     </div>
