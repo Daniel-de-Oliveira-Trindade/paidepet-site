@@ -49,8 +49,7 @@
     <div class="emoji">🔑</div>
     <div class="brand">Pai de Pet</div>
     <h1>Redefinir senha</h1>
-    <p>Abrindo o app para você criar uma nova senha…</p>
-    <p>Se o app não abrir automaticamente, toque no botão abaixo.</p>
+    <p>Toque no botão abaixo para abrir o app e criar uma nova senha.</p>
     <button class="btn" id="btn">Abrir o Pai de Pet</button>
     <p class="footer">
       Precisa de ajuda?
@@ -80,10 +79,13 @@
       window.location.href = appUrl();
     });
 
+    // Sem auto-redirect no load: no iOS Safari, um segundo location.href pra
+    // um custom scheme (o clique no botão) é ignorado em silêncio se a página
+    // já tiver tentado abrir o app sozinha. p/index.html (post de pet perdido)
+    // só dispara no toque do usuário e é a versão confirmada funcionando nos
+    // dois SOs — mantém o mesmo padrão aqui.
     window.addEventListener('load', function () {
-      var url = appUrl();
       clearHashFromHistory();
-      window.location.href = url;
     });
   </script>
 </body>
