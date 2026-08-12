@@ -173,6 +173,12 @@
       color: var(--muted);
       margin-bottom: 0.75rem;
     }
+    .badge-row {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
     .badge-img { height: 42px; width: auto; }
 
     /* ── Erro ── */
@@ -318,9 +324,14 @@
 
     html += '<div class="download-cta">';
     html += '<p>Ainda não tem o app? Baixe e ajude a encontrar pets perdidos na sua cidade.</p>';
+    html += '<div class="badge-row">';
     html += '<a href="https://play.google.com/store/apps/details?id=app.paidepet" target="_blank" rel="noopener">';
     html += '<img class="badge-img" src="/google-play-badge.svg" alt="Disponível no Google Play" />';
     html += '</a>';
+    html += '<a href="https://apps.apple.com/br/app/pai-de-pet/id6788947461" target="_blank" rel="noopener">';
+    html += '<img class="badge-img" src="/app-store-badge.png" alt="Disponível na App Store" />';
+    html += '</a>';
+    html += '</div>';
     html += '</div>';
 
     el('content').innerHTML = html;
@@ -332,7 +343,7 @@
   window.openOrInstall = function (postId) {
     var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     var store = isIOS
-      ? 'https://apps.apple.com/br/app/pai-de-pet/id000000000'
+      ? 'https://apps.apple.com/br/app/pai-de-pet/id6788947461'
       : 'https://play.google.com/store/apps/details?id=app.paidepet';
 
     // Fallback pra loja se o app não abrir (não instalado). Só dispara se a
